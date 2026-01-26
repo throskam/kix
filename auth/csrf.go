@@ -43,3 +43,14 @@ func GetFreshCSRFToken(ctx context.Context) string {
 
 	return GetCSRFToken(ctx)
 }
+
+// GetCSRFTokenOrCreate returns the CSRF token from the session or creates a new one.
+func GetCSRFTokenOrCreate(ctx context.Context) string {
+	token := GetCSRFToken(ctx)
+
+	if token == "" {
+		token = GenerateCSRFToken()
+	}
+
+	return token
+}
