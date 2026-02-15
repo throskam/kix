@@ -11,6 +11,7 @@ import (
 
 var ErrAuthIdentifyFailure = errors.New("failed to identify")
 
+// Authenticate authenticates the user and sets the identity in the context.
 func Authenticate(
 	identify func(context.Context, *sess.Session) (any, error),
 	handleError func(http.ResponseWriter, *http.Request, error),
@@ -32,6 +33,7 @@ func Authenticate(
 	}
 }
 
+// Authenticated ensures that the user is authenticated.
 func Authenticated[T any](
 	handleError func(http.ResponseWriter, *http.Request, error),
 ) func(http.Handler) http.Handler {
@@ -76,9 +78,7 @@ func CSRF(
 				return
 			}
 
-			session := sess.MustGetSession(r.Context())
-
-			token := session.GetFirst(CSRFTokenKey)
+			token := GetCSRFToken(r.Context())
 
 			if token == "" || token != r.Header.Get("X-CSRF-TOKEN") {
 				handleError(w, r, ErrCSRFTokenMismatch)

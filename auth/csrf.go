@@ -49,7 +49,7 @@ func GetCSRFTokenOrCreate(ctx context.Context) string {
 	token := GetCSRFToken(ctx)
 
 	if token == "" {
-		token = GenerateCSRFToken()
+		return GetFreshCSRFToken(ctx)
 	}
 
 	return token
